@@ -55,14 +55,14 @@ class SightEngineClient {
     func checkImage(image: UIImage, check: Check, completion:@escaping(_:Any)->Void) {
         let url = formatURL(baseURL: sightEngineURL, check: check)
         
-        let imageData = UIImagePNGRepresentation(image)!
-        let params = formatParameters(imageData: imageData, check: check)
+        let imageData = UIImageJPEGRepresentation(image, 0.5)
+        let params = formatParameters(imageData: imageData!, check: check)
         
         Alamofire.upload(multipartFormData: { multipartFormData in
             for (key, value) in params {
                 multipartFormData.append(value.data(using: .utf8)!, withName: key)
             }
-            multipartFormData.append(imageData, withName: "media", fileName: "image.png", mimeType: "image/png")
+            multipartFormData.append(imageData!, withName: "media", fileName: "image.jpg", mimeType: "image/jpg")
         }, to: url, method: .post) { result in
             
             switch result {

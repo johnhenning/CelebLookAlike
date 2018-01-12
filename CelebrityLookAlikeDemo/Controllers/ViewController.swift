@@ -20,17 +20,36 @@ class ViewController: UIViewController {
     var sightEngineClient: SightEngineClient?
     
     var celebrityList: [String]?
+    var celebImageMap: [String:UIImage]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         imageSearch = ImageSearch.shared
         sightEngineClient = SightEngineClient.shared
+        celebrityList = [String]()
+        lookAlikeTableView.delegate = self
+        lookAlikeTableView.dataSource = self
         
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let indexPath = lookAlikeTableView.indexPathForSelectedRow {
+            lookAlikeTableView.deselectRow(at: indexPath, animated: false)
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc = segue.destination as? DetailsViewController
+        let indexPath = lookAlikeTableView.indexPathForSelectedRow
+        let cell = lookAlikeTableView.cellForRow(at: indexPath!) as! CelebrityTableViewCell
+        
+        vc?.celebImage = cell.celebImageView.image
+        vc?.celebName = cell.nameLabel.text
     }
     
     func findCelebrityLookAlikes() {
@@ -47,10 +66,12 @@ class ViewController: UIViewController {
                 let faces = json["faces"] as? [[String:Any]]
                 let celebrities = faces![0]["celebrity"] as? [[String:Any]]
                 self.celebrityList = [String]()
+                self.celebImageMap = [String:UIImage]()
                 
                 for celebrity in celebrities! {
                     self.celebrityList?.append((celebrity["name"] as? String)!)
                 }
+                self.lookAlikeTableView.reloadData()
             }
 
         }
@@ -82,13 +103,14 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
         let image = info[UIImagePickerControllerOriginalImage] as! UIImage
         imageView.image = image
         findCelebrityLookAlikes()
-        lookAlikeTableView.reloadData()
         dismiss(animated:true, completion: nil)
     }
 }
 
 extension ViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90.0
+    }
 }
 
 extension ViewController: UITableViewDataSource {
@@ -97,7 +119,27 @@ extension ViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
+        let cell = lookAlikeTableView.dequeueReusableCell(withIdentifier: "celebrity") as? CelebrityTableViewCell
+        let name = celebrityList?[indexPath.row]
+        cell?.nameLabel.text = name
+        
+        if let image = celebImageMap![name!]{
+            cell?.celebImageView.image = image
+        } else {
+            imageSearch?.getImageURLWithSearchResult(searchTerm: name!) { url in
+                if let url = url as? URL {
+                    cell?.celebImageView.af_setImage(withURL: url)
+                    self.celebImageMap![name!] = cell?.celebImageView.image
+                } else {
+                    if let error = url as? Error {
+                        print(error.localizedDescription)
+                    }
+                }
+                
+            }
+        }
+        
+        return cell!
     }
     
     

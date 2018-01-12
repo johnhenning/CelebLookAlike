@@ -44,8 +44,12 @@ class ImageSearch {
         
         Alamofire.request("https://www.googleapis.com/customsearch/v1", method: .get, parameters: params, encoding: URLEncoding.queryString).responseJSON { response in
             if let json = response.result.value as? [String: Any] {
+                if let error = json["error"] {
+                    print(error)
+                    completion(error)
+                    return
+                }
                 let items = json["items"] as? [[String: Any]]
-                
                 let imageURL = URL(string: (items![0]["link"] as? String)!)
                 completion(imageURL!)
             } else {
