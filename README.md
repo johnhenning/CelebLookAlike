@@ -3,7 +3,7 @@
 > iOS application that compares your face to celebrities. Uses Sightengine and Google Custom Search APIs
 
 ### Requirements  
-- XCode
+- [XCode](https://developer.apple.com/xcode/)
 - [Cocopods](https://guides.cocoapods.org/using/getting-started.html)
 - [SightEngine API](https://sightengine.com/)
 - [Google Custom Search API](https://developers.google.com/custom-search/docs/overview)
