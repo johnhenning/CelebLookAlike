@@ -9,17 +9,8 @@
 import UIKit
 
 class DetailsViewController: UIViewController {
-
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var celebImageView: UIImageView!
-    
-    var celebImage: UIImage?
-    var celebName: String?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        nameLabel.text = celebName
-        celebImageView.image = celebImage
         // Do any additional setup after loading the view.
     }
 

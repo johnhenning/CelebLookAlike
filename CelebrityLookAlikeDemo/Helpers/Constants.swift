@@ -8,7 +8,7 @@
 
 import Foundation
 
-let GoogleAPIKey = "AIzaSyAUB3HsM5ng_gpcL1fns_4pUOz2ldA2_Ss"
-let GoogleCustomSearchKey = "003908139747612471232:x1eksustalm"
-let SightEngineAPIUser = "465518883"
-let SightEngineAPISecret = "EMxpP7sA89XeQfWXZs6S"
+let GoogleAPIKey = "<GOOGLE_API_KEY>"
+let GoogleCustomSearchKey = "<GOOGLE_CUSTOM_SEARCH_KEY>"
+let SightEngineAPIUser = "<SIGHT_ENGINE_API_USER>"
+let SightEngineAPISecret = "<SIGHT_ENGINE_API_SECRET>"
