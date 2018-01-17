@@ -19,7 +19,16 @@ class ViewController: UIViewController {
     var imageSearch: ImageSearch?
     var sightEngineClient: SightEngineClient?
     
-    var celebrityList: [String]?
+    var celebrityList: [String]? {
+        didSet {
+            if celebrityList?.count == 0 {
+                lookAlikeTableView.isHidden = true
+            } else {
+                lookAlikeTableView.isHidden = false
+            }
+        }
+    }
+    
     var celebImageMap: [String:UIImage]?
     
     override func viewDidLoad() {
@@ -29,7 +38,7 @@ class ViewController: UIViewController {
         celebrityList = [String]()
         lookAlikeTableView.delegate = self
         lookAlikeTableView.dataSource = self
-        
+        lookAlikeTableView.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -71,7 +80,9 @@ class ViewController: UIViewController {
                 for celebrity in celebrities! {
                     self.celebrityList?.append((celebrity["name"] as? String)!)
                 }
-                self.lookAlikeTableView.reloadData()
+                if self.celebrityList!.count > 0{
+                    self.lookAlikeTableView.reloadData()
+                }
             }
 
         }
